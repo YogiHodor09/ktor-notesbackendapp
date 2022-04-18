@@ -5,7 +5,7 @@ val logback_version: String by project
 plugins {
     application
     kotlin("jvm") version "1.6.20"
-                id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.20"
 }
 
 group = "com.example"
@@ -34,6 +34,13 @@ dependencies {
     implementation("io.ktor:ktor-server-auth-jwt-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-netty-jvm:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    // https://mvnrepository.com/artifact/org.ktorm/ktorm-core
+    implementation("org.ktorm:ktorm-core:3.4.1")
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation("mysql:mysql-connector-java:8.0.28")
+    
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+
+
 }
