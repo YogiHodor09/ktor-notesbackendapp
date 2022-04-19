@@ -38,7 +38,9 @@ dependencies {
     implementation("org.ktorm:ktorm-core:3.4.1")
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     implementation("mysql:mysql-connector-java:8.0.28")
-    
+    // https://mvnrepository.com/artifact/org.mindrot/jbcrypt
+    implementation("org.mindrot:jbcrypt:0.4")
+
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 

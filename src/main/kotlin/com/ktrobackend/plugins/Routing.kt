@@ -1,5 +1,6 @@
 package com.ktrobackend.plugins
 
+import com.ktrobackend.routing.authenticationRoutes
 import com.ktrobackend.routing.notesRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -12,6 +13,7 @@ import java.io.File
 fun Application.configureRouting() {
 
     notesRoutes() // calling routes for notes
+    authenticationRoutes() // calling routes for users
 
     // basic routes for all endpoints in basic
     routing {
@@ -22,7 +24,7 @@ fun Application.configureRouting() {
             println("Query Params : ${call.request.queryParameters.names()}") // query params*/
 
 //            call.respondText("Hello Ktor Home Route !")
-            val userResponse = UserResponse("Yogeshwar", email = "yogesh@gmail.com")
+            val userResponse = UserInfoResponse("Yogeshwar", email = "yogesh@gmail.com")
             print(userResponse)
             call.respond(userResponse) // getting object as response
         }
@@ -86,7 +88,7 @@ data class UserInfo(
 
 
 @kotlinx.serialization.Serializable
-data class UserResponse(
+data class UserInfoResponse(
     val name: String,
     val email: String
 )
