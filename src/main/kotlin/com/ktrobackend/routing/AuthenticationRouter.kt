@@ -11,6 +11,8 @@ import com.ktrobackend.utils.TokenManager
 import com.typesafe.config.ConfigFactory
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.*
+import io.ktor.server.auth.jwt.*
 import io.ktor.server.config.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -146,6 +148,17 @@ fun Application.authenticationRoutes() {
                 )
             )
 
+        }
+
+        // create protected endpoint using JWTPrinciple
+
+        authenticate {
+            get("/users/me") {
+                val principle = call.principal<JWTPrincipal>()
+                val username = principle!!.payload.getClaim("username").asString()
+                val userId = principle.payload.getClaim("userId").asInt()
+                call.respondText("Hello , $username with id : $userId")
+            }
         }
     }
 }
