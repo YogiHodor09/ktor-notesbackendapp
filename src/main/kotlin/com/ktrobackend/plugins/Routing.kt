@@ -1,5 +1,6 @@
 package com.ktrobackend.plugins
 
+import com.ktrobackend.routing.notesRoutes
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
@@ -10,7 +11,9 @@ import java.io.File
 
 fun Application.configureRouting() {
 
+    notesRoutes() // calling routes for notes
 
+    // basic routes for all endpoints in basic
     routing {
         get("/") {
 
