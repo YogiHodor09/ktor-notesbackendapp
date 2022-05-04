@@ -23,10 +23,10 @@ fun Application.configureRouting() {
             println("Headers : ${call.request.headers.names()}") // headers
             println("Query Params : ${call.request.queryParameters.names()}") // query params*/
 
-//            call.respondText("Hello Ktor Home Route !")
-            val userResponse = UserInfoResponse("Yogeshwar", email = "yogesh@gmail.com")
+            call.respondText("Notes App !")
+            /*val userResponse = UserInfoResponse("Yogeshwar", email = "yogesh@gmail.com")
             print(userResponse)
-            call.respond(userResponse) // getting object as response
+            call.respond(userResponse)*/ // getting object as response
         }
 
         get("/iphones/{page}") {

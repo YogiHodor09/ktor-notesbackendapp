@@ -9,6 +9,6 @@ object DatabaseConnection {
         url = "jdbc:mysql://127.0.0.1:3306/notes",
         driver = "com.mysql.cj.jdbc.Driver",
         user = "root",
-        password = "admin"
+        password = "root"
     )
 }

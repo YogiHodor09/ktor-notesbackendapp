@@ -14,7 +14,7 @@ import io.ktor.server.plugins.contentnegotiation.*
 
 
 fun main() {
-    embeddedServer(Netty, port = 8080, host = "localhost") {
+    embeddedServer(Netty, port = 8083, host = "192.168.1.176") {
         val config = HoconApplicationConfig(ConfigFactory.load())
         val tokenManager = TokenManager(config)
 
