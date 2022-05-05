@@ -54,6 +54,7 @@ fun Application.authenticationRoutes() {
                 it[UserEntity.username]
             }.firstOrNull()
 
+
             if (user != null) { // user already exists in "user" variable
                 call.respond(
                     HttpStatusCode.BadRequest, NoteResponse(
@@ -68,13 +69,26 @@ fun Application.authenticationRoutes() {
                 }
 
                 if (result == 1) {
-                    // Send success response to the client
+                    // check if user exists
+                    val userData = db.from(UserEntity).select().where {
+                        UserEntity.username eq username
+                    }.map {
+                        val id = it[UserEntity.id]!!
+                        val username = it[UserEntity.username]!!
+                        val password = it[UserEntity.password]!!
+                        User(id, username, password)
+                    }.firstOrNull()
+
+                    // get Token using token manager and return user created response
+
+                    val token = tokenManager.generateJWTToken(userData!!)
+
                     call.respond(
-                        HttpStatusCode.Created, NoteResponse(
-                            success = true,
-                            data = "User Created !!"
+                        HttpStatusCode.OK, NoteResponse(
+                            success = true, data = token
                         )
                     )
+                    return@post
                 } else {
                     // send failure response to the client
                     call.respond(
@@ -83,72 +97,14 @@ fun Application.authenticationRoutes() {
                             data = "User Creation failed !!"
                         )
                     )
+
+                    return@post
                 }
             }
 
 
         }
 
-        // login user
-        post("/users/login") {
-            val userCredentials = call.receive<UserCredentials>()
-
-            // checking valid username and password length
-
-            if (!userCredentials.validCredentials()) {
-                call.respond(
-                    HttpStatusCode.BadRequest, NoteResponse(
-                        success = false,
-                        data = "Username length should be greater than or equal to 3 && password length is greater than or equal to 6"
-                    )
-                )
-                return@post
-            }
-
-            val username = userCredentials.username.lowercase(Locale.getDefault())
-            val password = userCredentials.password
-
-            // check if user exists
-            val user = db.from(UserEntity).select().where {
-                UserEntity.username eq username
-            }.map {
-                val id = it[UserEntity.id]!!
-                val username = it[UserEntity.username]!!
-                val password = it[UserEntity.password]!!
-                User(id, username, password)
-            }.firstOrNull()
-
-
-            if (user == null) { // user not exists
-                call.respond(
-                    HttpStatusCode.BadRequest, NoteResponse(
-                        success = false, data = "Invalid username or password"
-                    )
-                )
-                return@post
-            }
-
-            val doesPasswordMatch = BCrypt.checkpw(password, user.password)
-            if (!doesPasswordMatch) {
-                call.respond(
-                    HttpStatusCode.BadRequest, NoteResponse(
-                        success = false, data = "Invalid username or password"
-                    )
-                )
-                return@post
-            }
-
-            // get Token using token manager
-
-            val token = tokenManager.generateJWTToken(user)
-
-            call.respond(
-                HttpStatusCode.OK, NoteResponse(
-                    success = true, data = token
-                )
-            )
-
-        }
 
         // create protected endpoint using JWTPrinciple
 
@@ -158,6 +114,57 @@ fun Application.authenticationRoutes() {
                 val username = principle!!.payload.getClaim("username").asString()
                 val userId = principle.payload.getClaim("userId").asInt()
                 call.respondText("Hello , $username with id : $userId")
+            }
+
+            // login user
+            post("/users/login") {
+                val userCredentials = call.receive<UserCredentials>()
+
+                // checking valid username and password length
+
+                if (!userCredentials.validCredentials()) {
+                    call.respond(
+                        HttpStatusCode.BadRequest, NoteResponse(
+                            success = false,
+                            data = "Username length should be greater than or equal to 3 && password length is greater than or equal to 6"
+                        )
+                    )
+                    return@post
+                }
+
+                val username = userCredentials.username.lowercase(Locale.getDefault())
+                val password = userCredentials.password
+
+                // check if user exists
+                val user = db.from(UserEntity).select().where {
+                    UserEntity.username eq username
+                }.map {
+                    val id = it[UserEntity.id]!!
+                    val username = it[UserEntity.username]!!
+                    val password = it[UserEntity.password]!!
+                    User(id, username, password)
+                }.firstOrNull()
+
+
+                if (user == null) { // user not exists
+                    call.respond(
+                        HttpStatusCode.BadRequest, NoteResponse(
+                            success = false, data = "Invalid username or password"
+                        )
+                    )
+                    return@post
+                }
+
+                val doesPasswordMatch = BCrypt.checkpw(password, user.password)
+                if (!doesPasswordMatch) {
+                    call.respond(
+                        HttpStatusCode.BadRequest, NoteResponse(
+                            success = false, data = "Invalid username or password"
+                        )
+                    )
+                    return@post
+                }
+
             }
         }
     }
