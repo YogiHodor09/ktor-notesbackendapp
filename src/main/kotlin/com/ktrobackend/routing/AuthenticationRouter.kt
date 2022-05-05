@@ -165,6 +165,12 @@ fun Application.authenticationRoutes() {
                     return@post
                 }
 
+                call.respond(
+                    HttpStatusCode.OK, NoteResponse(
+                        success = true, data = "User Logged In ..."
+                    )
+                )
+
             }
         }
     }

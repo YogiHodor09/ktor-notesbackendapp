@@ -11,7 +11,8 @@ class TokenManager(private val config: HoconApplicationConfig) { // 'HoconApplic
     val audience = config.property("audience").getString()
     val secret = config.property("secret").getString()
     val issuer = config.property("issuer").getString()
-    val expirationDate = System.currentTimeMillis() + 60000
+//    val expirationDate = System.currentTimeMillis() + 36_000_00 * 10 // 10 hrs
+    val expirationDate = System.currentTimeMillis() + 3.154e+10.toLong() // 365 days
     fun generateJWTToken(user: User): String {
 
 
