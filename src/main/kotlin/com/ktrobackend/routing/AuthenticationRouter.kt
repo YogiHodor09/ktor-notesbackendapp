@@ -165,9 +165,13 @@ fun Application.authenticationRoutes() {
                     return@post
                 }
 
+                // get Token using token manager and return user created response
+
+                val token = tokenManager.generateJWTToken(user)
+
                 call.respond(
                     HttpStatusCode.OK, NoteResponse(
-                        success = true, data = "User Logged In ..."
+                        success = true, data = token
                     )
                 )
 
